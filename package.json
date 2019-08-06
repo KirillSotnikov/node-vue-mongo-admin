@@ -1,0 +1,28 @@
+{
+  "name": "vue-material-dashboard-master",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start\"",
+    "install": "concurrently --kill-others-on-fail \"npm run install-server\" \"npm run install-client\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "cd server && npm run server",
+    "start": "cd client && npm run dev",
+    "install-server":"cd server && npm install",
+    "install-client":"cd client && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KirillSotnikov/vue-dashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KirillSotnikov/vue-dashboard/issues"
+  },
+  "homepage": "https://github.com/KirillSotnikov/vue-dashboard#readme",
+  "dependencies": {
+    "concurrently": "^4.1.1"
+  }
+}
