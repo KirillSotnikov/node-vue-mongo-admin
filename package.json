@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start\"",
-    "install": "concurrently --kill-others-on-fail \"npm run install-server\" \"npm run install-client\"",
+    "install-all": "concurrently --kill-others-on-fail \"npm run install-server\" \"npm run install-client\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "cd server && npm run server",
     "start": "cd client && npm run dev",
