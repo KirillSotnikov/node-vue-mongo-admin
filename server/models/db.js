@@ -14,8 +14,9 @@ mongoose.connect(urlDB, {useNewUrlParser: true})
 const db = mongoose.connection;
 
 const UserSchema = new Schema({
-  email: String,
-  password: String
+  login: String,
+  password: String,
+  isAuthorized: Boolean
 })
 
 const User = mongoose.model('User', UserSchema)

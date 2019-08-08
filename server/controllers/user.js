@@ -1,19 +1,30 @@
-const bcrypt = require('bcrypt')
-
-const jwt = require('jsonwebtoken')
+const { getToken } = require('../libs/utils')
 
 const {User} = require('../models/db')
 
-const header = { "alg": "HS256", "typ": "JWT"}
-const payload = { "userId": "b08f86af-35da-48f2-8fab-cef3904660bd" }
+const createNewUser = async (data) => {
+  const userDB = await new User(data)
 
-const SECRET_KEY = 'cAtwa1kkEy'
-const unsignedToken = base64urlEncode(header) + '.' + base64urlEncode(payload)
-const signature = HMAC-SHA256(unsignedToken, SECRET_KEY)
+  const dbCall = await userDB.save()
+}
 
-module.exports.addUser = (req, res, next) => {
-  const token = encodeBase64Url(header) + '.' + encodeBase64Url(payload) + '.' + encodeBase64Url(signature)
-  console.log(req)
-  let token = jwt.sign({ foo: 'bar' }, 'shhhhh');
-  res.json({success: true})
+module.exports.addUser = async (req, res, next) => {
+  try{
+    let userData = await User.find({login: req.body.login})
+    let token = getToken()
+    if(userData.length !== 0) {
+      res.status(401).json({msg:'Login is already exists'})
+    } else {
+      const user = {
+        login: req.body.login,
+        password: req.body.password,
+        isAuthorized: true
+      }
+      // await createNewUser(user)
+      res.json({token: token})
+    }
+  } catch(err) {
+    console.log(err)
+    throw new Error(err)
+  }
 }
