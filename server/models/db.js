@@ -16,7 +16,7 @@ const db = mongoose.connection;
 const UserSchema = new Schema({
   login: String,
   password: String,
-  isAuthorized: Boolean
+  token: String
 })
 
 const User = mongoose.model('User', UserSchema)

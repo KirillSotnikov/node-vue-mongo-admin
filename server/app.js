@@ -21,9 +21,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-app.use(cookieParser());
-
 app.use('/', require('./routes/index'))
 
 const server = app.listen(process.env.PORT || 3000, function() {
