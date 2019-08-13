@@ -14,9 +14,11 @@ mongoose.connect(urlDB, {useNewUrlParser: true})
 const db = mongoose.connection;
 
 const UserSchema = new Schema({
-  login: String,
+  login: { type: String },
   password: String,
-  token: String
+  token: {
+    type: String,
+  }
 })
 
 const User = mongoose.model('User', UserSchema)
@@ -32,37 +34,17 @@ const teamSchema = new Schema({
 
 const Team = mongoose.model('Team', teamSchema)
 
-// createTeamInfo = async() => {
-//   const teamInfo = await new Team({
-//     isShow: true,
-//     id: 7,
-//     editLink: '/editTeam',
-//     ru: {
-//       name: "SEVEN",
-//       salary: "$36,738",
-//       country: "Niger",
-//       city: "Oud-Turnhout"
-//     }, 
-//     ua: {
-//       name: "SEVEN",
-//       salary: "$36,738",
-//       country: "Niger",
-//       city: "Oud-Turnhout"
-//     },
-//     en: {
-//       name: "SEVEN",
-//       salary: "$36,738",
-//       country: "Niger",
-//       city: "Oud-Turnhout"
-//     }
-//   })
-//   const dbCall = await teamInfo.save()
-// }
+const imageSchema = new Schema({
+  image: {
+    type: String,
+    required: true
+  }
+})
 
-// createTeamInfo()
-
+const ImageDB = mongoose.model('ImageDB', imageSchema)
 
 module.exports = {
   Team,
-  User
+  User,
+  ImageDB
 }

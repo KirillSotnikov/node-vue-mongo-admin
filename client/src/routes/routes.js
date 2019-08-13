@@ -15,6 +15,37 @@ import Settings from "@/pages/Settings.vue";
 import Login from "@/pages/Login.vue";
 import Registration from "@/pages/Registration.vue";
 import UserProfile from "@/pages/UserProfile.vue";
+import ImagesPage from "@/pages/ImagesPage.vue";
+import AddImage from "@/pages/AddImage.vue";
+
+const getTokenSC = (itemName) => {
+  return window.sessionStorage.getItem(itemName)
+}
+
+const serverAPI = `http://${window.location.hostname}:3000`
+
+const validateToken = (next) => {
+  let sessionToken = getTokenSC('token')
+  let data = {
+    token: sessionToken
+  }
+  fetch(`${serverAPI}/get-user-token`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Accept' : 'application/json',
+      'Content-Type' : 'application/json'
+    }
+  }).then(res => {
+    return res.json()
+  }).then(body => {
+    if(body.success) {
+      next()
+    } else {
+      next('/login')
+    }
+  })
+}
 
 const routes = [
   {
@@ -25,7 +56,10 @@ const routes = [
       {
         path: "request",
         name: "Request",
-        component: Request
+        component: Request,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
       },
       {
         path: "login",
@@ -42,29 +76,60 @@ const routes = [
       {
         path: "team",
         name: "Team",
-        component: Team
+        component: Team,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
       },
       {
         path: "createTeam",
         name: "Create Team",
-        component: CreateTeam
+        component: CreateTeam,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
       },
       {
         path: "editTeam/:id",
         name: "Edit Team",
         component: EditTeam,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        },
         props: true
       },
       {
         path: "settings",
         name: "Settings",
-        component: Settings
+        component: Settings,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
       },
       {
         path: "user",
         name: "User Profile",
-        component: UserProfile
-      }
+        component: UserProfile,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
+      },
+      {
+        path: "images",
+        name: "Images",
+        component: ImagesPage,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
+      },
+      {
+        path: "add-image",
+        name: "Add image",
+        component: AddImage,
+        beforeEnter: (to, form, next) => {
+          validateToken(next)
+        }
+      },
     ]
   }
 ];

@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form @submit.prevent="updateProfile">
     <md-card>
       <md-card-header :data-background-color="dataBackgroundColor">
         <h4 class="title">Edit Profile</h4>
@@ -8,65 +8,33 @@
 
       <md-card-content>
         <div class="md-layout">
-          <div class="md-layout-item md-small-size-100 md-size-50">
-            <md-field>
-              <label>User Name</label>
-              <md-input v-model="username" type="text"></md-input>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-small-size-100 md-size-50">
-            <md-field>
-              <label>Email Address</label>
-              <md-input v-model="emailadress" type="email"></md-input>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-small-size-100 md-size-50">
-            <md-field>
-              <label>First Name</label>
-              <md-input v-model="firstname" type="text"></md-input>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-small-size-100 md-size-50">
-            <md-field>
-              <label>Last Name</label>
-              <md-input v-model="lastname" type="text"></md-input>
-            </md-field>
-          </div>
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
-              <label>Adress</label>
-              <md-input v-model="address" type="text"></md-input>
+              <label>Login</label>
+              <md-input v-model="userData.login" type="text"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-small-size-100 md-size-33">
+          <div class="md-layout-item md-small-size-100 md-size-50">
             <md-field>
-              <label>City</label>
-              <md-input v-model="city" type="text"></md-input>
+              <label>Old Password</label>
+              <md-input v-model="userData.password" type="password"></md-input>
             </md-field>
           </div>
-          <div class="md-layout-item md-small-size-100 md-size-33">
+          <div class="md-layout-item md-small-size-100 md-size-50">
             <md-field>
-              <label>Country</label>
-              <md-input v-model="country" type="text"></md-input>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-small-size-100 md-size-33">
-            <md-field>
-              <label>Postal Code</label>
-              <md-input v-model="code" type="number"></md-input>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-size-100">
-            <md-field maxlength="5">
-              <label>About Me</label>
-              <md-textarea v-model="aboutme"></md-textarea>
+              <label>New Password</label>
+              <md-input v-model="newPassword" type="password"></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-size-100 text-right">
-            <md-button class="md-raised md-success">Update Profile</md-button>
+            <md-button type="submit" class="md-raised md-success">Update Profile</md-button>
           </div>
         </div>
       </md-card-content>
+      <md-snackbar :md-position="position" :md-duration="isInfinity ? Infinity : duration" :md-active.sync="showSnackbar" md-persistent>
+        <span>Your profile was edited successfully!</span>
+        <md-button class="md-success" @click="showSnackbar = false">Close</md-button>
+      </md-snackbar>
     </md-card>
   </form>
 </template>
@@ -77,21 +45,43 @@ export default {
     dataBackgroundColor: {
       type: String,
       default: ""
+    },
+    userData: {
+      type: Object,
+      default: {}
     }
   },
   data() {
     return {
-      username: null,
-      disabled: null,
-      emailadress: null,
-      lastname: null,
-      firstname: null,
-      address: null,
-      city: null,
-      country: null,
-      code: null,
-      aboutme: ''
+      newPassword: '',
+      showSnackbar: false,
+      position: 'center',
+      duration: 4000,
+      isInfinity: false
     };
+  },
+  methods: {
+    updateProfile() {
+      let login = this.userData.login
+      let password = this.userData.password
+      let newPassword = this.newPassword
+      let userToken = window.sessionStorage.getItem('token')
+      if(newPassword == ''){
+        return false
+      }
+      let newData = {
+        login,
+        password,
+        newPassword,
+        userToken
+      }
+      this.$store.dispatch('updateProfile', newData)
+        .then(() => {
+          this.showSnackbar = true,
+          this.userData.password = this.newPassword
+          this.newPassword = ''
+        })
+    }
   }
 };
 </script>

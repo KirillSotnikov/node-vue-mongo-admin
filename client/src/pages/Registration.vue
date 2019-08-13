@@ -34,6 +34,9 @@
 </template>
 
 <script>
+
+const serverAPI = `http://${window.location.hostname}:3000`
+
 export default {
   data() {
     return {
@@ -43,20 +46,42 @@ export default {
     }
   },
   methods: {
-    registrateUser() {
-      if(this.login == '' || this.password == '' ){
-        alert('Input your data!!!')
-        return false
+    async registrateUser() {
+      try{
+        if(this.login == '' || this.password == '' ){
+          alert('Input your data!!!')
+          return false
+        }
+        if(this.password !== this.repeatPassword) {
+          alert('Repeat password is not correct')
+          return false
+        }
+        let userData = {
+          login: this.login,
+          password: this.password
+        }
+        const addUser = fetch(`${serverAPI}/add-user`, {
+          method: 'POST',
+          body: JSON.stringify(userData),
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+          }
+        }).then(res => {
+          if(res.ok == true) {
+            return res.json()
+          } else {
+            return false
+          }
+        }).then(body => {
+          window.sessionStorage.setItem('token', body.token)
+          this.$router.push('/request')
+        })
+      } catch (err) {
+        console.log(err)
+        throw new Error(err)
       }
-      if(this.password !== this.repeatPassword) {
-        alert('Repeat password is not correct')
-        return false
-      }
-      let userData = {
-        login: this.login,
-        password: this.password
-      }
-      this.$store.dispatch('registrateUser', userData)
+      
     }
   }
 }

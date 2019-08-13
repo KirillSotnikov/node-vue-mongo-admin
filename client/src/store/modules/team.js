@@ -366,7 +366,6 @@ export default {
           payload.ua,
           payload.en
         )
-        console.log(updatedWorker)
 
         const updateWorkerRequest = await fetch(`${serverAPI}/edit-team`, {
           method: 'POST',

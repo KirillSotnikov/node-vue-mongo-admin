@@ -8,11 +8,14 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser');
 
 
+
+
 app.use(morgan('dev'))
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+
+app.use(express.static(path.join(__dirname)));
 
 app.use((req, res, next) => {
   res.append('Access-Control-Allow-Origin', ['*']);
@@ -22,6 +25,9 @@ app.use((req, res, next) => {
 });
 
 app.use('/', require('./routes/index'))
+
+
+
 
 const server = app.listen(process.env.PORT || 3000, function() {
   console.log('Server is satated on port: ' + server.address().port)
